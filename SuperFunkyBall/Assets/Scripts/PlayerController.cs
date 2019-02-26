@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     public float speed;
     public float rotateSpeed;
+    public float count;
+    public Text countText;
+    public Text winText;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();    
+        rb = GetComponent<Rigidbody>();
+        winText.text = ""; 
     }
 
     private void FixedUpdate()
@@ -33,5 +37,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // Destroy(other.gameObject);
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
+            count++;
+            setCountText();
 
+        }else if(other.gameObject.CompareTag("FlagPole"))
+        {
+            winText.text = "You Win!!";
+            Time.timeScale = 0;
+        }
+    }
+    void setCountText()
+    {
+        countText.text = "Count: " + count.ToString();
+    }
 }
