@@ -7,9 +7,14 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public float speed;
     public float rotateSpeed;
+
     public float count;
     public Text countText;
     public Text winText;
+
+	private bool jump;
+	private float previousPosition;
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,15 +28,16 @@ public class PlayerController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
         float h = Input.GetAxis("Horizontal") * rotateSpeed * Time.deltaTime;
-        bool jump = Input.GetButtonDown("Fire1");
+		jump = Input.GetButtonDown("Fire1");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
         rb.AddForce(movement * speed);
         rb.AddTorque(transform.right * h);
 
-        if(jump)
+        if(jump && previousPosition < transform.position.y + 0.1)
         {
-            Vector3 jumpForce = new Vector3(0.0f, 200.0f, 0.0f);
+			previousPosition = transform.position.y;
+            Vector3 jumpForce = new Vector3(0.0f, 400.0f, 0.0f);
             rb.AddForce(jumpForce);
             Debug.Log("I should jump");
         }
@@ -52,6 +58,7 @@ public class PlayerController : MonoBehaviour
             Time.timeScale = 0;
         }
     }
+    
     void setCountText()
     {
         countText.text = "Count: " + count.ToString();
